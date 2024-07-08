@@ -36,7 +36,7 @@ def train(train_set: DataLoader, eval_set: DataLoader, test_set: DataLoader, mod
         
     
     num_no_imp = 0
-    for i in range(MAX_EPOCH_NUMBER):
+    for i in tqdm(range(MAX_EPOCH_NUMBER)):
         epoch = i + 1
         epoch_start_time = time.time()
         total_loss = 0
@@ -63,7 +63,7 @@ def train(train_set: DataLoader, eval_set: DataLoader, test_set: DataLoader, mod
         # Validation test.
         val_acc = test_cnn.test(model, eval_set)
         train_acc = test_cnn.test(model, train_set)
-        test_acc = test_cnn.test(model. test_set)
+        test_acc = test_cnn.test(model, test_set)
         val_acc *= 100
         train_acc *= 100
         test_acc *= 100
