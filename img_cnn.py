@@ -14,27 +14,19 @@ class ImgCNN(nn.Module):
             nn.Conv2d(INPUT_CHANNELS, 32, 3, padding=1, stride=1),
             # Z1: (batch size, 32, 32, 32)
             nn.ReLU(),
-            # Input size: (batch size, 32, 32, 32)
-            nn.Conv2d(32, 32, 3, padding=1, stride=1),
-            # Z2: (batch size, 32, 32, 32)
-            nn.ReLU(),
             nn.MaxPool2d(2, stride=2, return_indices=True),
             # Max Pool 1 output size: (batch size, 32, 16, 16)
 
             # Input size: (batch size, 32, 16, 16)
-            nn.Conv2d(32, 64, 3, padding=1, stride=1),
-            # Z3: (batch size, 64, 16, 16)
-            nn.ReLU(),
-            # Input size: (batch size, 64, 16, 16)
-            nn.Conv2d(64, 64, 3, padding=1, stride=1),
-            # Z4: (batch size, 64, 16, 16)
+            nn.Conv2d(32, 32, 3, padding=1, stride=1),
+            # Z3: (batch size, 32, 16, 16)
             nn.ReLU(),
             nn.MaxPool2d(2, stride=2, return_indices=True),
-            # Max Pool 2 output size: (batch size, 64, 8, 8)
+            # Max Pool 2 output size: (batch size, 32, 8, 8)
         )
 
         self.classifier = nn.Sequential(
-            nn.Linear(64 * 8 * 8, 4096),
+            nn.Linear(32 * 8 * 8, 4096),
             nn.ReLU(),
             nn.Dropout(),
             nn.Linear(4096, 4096),
