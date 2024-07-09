@@ -12,20 +12,44 @@ class ImgCNN(nn.Module):
         self.features = nn.Sequential(
             # Input size: (batch size, 3, 32, 32)
             nn.Conv2d(INPUT_CHANNELS, 32, 3, padding=1, stride=1),
-            # Conv 1 output size: (batch size, 32, 32, 32)
+            # Z1: (batch size, 32, 32, 32)
+            nn.ReLU(),
+            # Input size: (batch size, 32, 32, 32)
+            nn.Conv2d(32, 32, 3, padding=1, stride=1),
+            # Z2: (batch size, 32, 32, 32)
             nn.ReLU(),
             nn.MaxPool2d(2, stride=2, return_indices=True),
             # Max Pool 1 output size: (batch size, 32, 16, 16)
 
-            nn.Conv2d(32, 32, 3, padding=1, stride=1),
-            # Conv 2 output size: (batch size, 32, 16, 16)
+            # Input size: (batch size, 32, 16, 16)
+            nn.Conv2d(32, 64, 3, padding=1, stride=1),
+            # Z3: (batch size, 64, 16, 16)
             nn.ReLU(),
-            nn.MaxPool2d(2, stride=2, return_indices=True)
-            # Max Pool 2 output size: (batch size, 32, 8, 8)
+            # Input size: (batch size, 64, 16, 16)
+            nn.Conv2d(64, 64, 3, padding=1, stride=1),
+            # Z4: (batch size, 64, 16, 16)
+            nn.ReLU(),
+            nn.MaxPool2d(2, stride=2, return_indices=True),
+            # Max Pool 2 output size: (batch size, 64, 8, 8)
+
+            # Input size: (batch size, 64, 8, 8)
+            nn.Conv2d(64, 128, 3, padding=1, stride=1),
+            # Z5: (batch size, 128, 8, 8)
+            nn.ReLU(),
+            # Input size: (batch size, 128, 8, 8)
+            nn.Conv2d(128, 128, 3, padding=1, stride=1),
+            # Z6: (batch size, 128, 8, 8)
+            nn.ReLU(),
+            # Input size: (batch size, 128, 8, 8)
+            nn.Conv2d(128, 128, 3, padding=1, stride=1),
+            # Z7: (batch size, 128, 8, 8)
+            nn.ReLU(),
+            nn.MaxPool2d(2, stride=1, return_indices=True)
+            # Max Pool 2 output size: (batch size, 128, 7, 7)
         )
 
         self.classifier = nn.Sequential(
-            nn.Linear(32 * 8 * 8, 4096),
+            nn.Linear(128 * 7 * 7, 4096),
             nn.ReLU(),
             nn.Dropout(),
             nn.Linear(4096, 4096),
