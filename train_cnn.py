@@ -53,7 +53,7 @@ def train(train_set: DataLoader, eval_set: DataLoader, test_set: DataLoader, max
             
             logits = model(images.to(device))
             
-            loss = criterion(logits, labels)
+            loss = criterion(logits, labels.to(device))
             total_loss += loss.item()
             num_batches += 1
             loss.backward()
