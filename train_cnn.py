@@ -48,8 +48,8 @@ def train(train_set: DataLoader, eval_set: DataLoader, test_set: DataLoader, max
         
         for data in train_set:
             images, labels = data
-            images = images.to(device)
-            labels = labels.to(device)
+            images = torch.tensor(images).to(device)
+            labels = torch.tensor(labels).to(device)
             
             optimizer.zero_grad()
             
