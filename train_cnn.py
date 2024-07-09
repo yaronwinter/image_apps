@@ -7,15 +7,17 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 import time
 
-MIN_EPOCH_NUMBER = 3
-MAX_EPOCH_NUMBER = 20
+MIN_EPOCH_NUMBER = 7
 EARLY_STOP_PATIENCE = 2
 
-def train(train_set: DataLoader, eval_set: DataLoader, test_set: DataLoader, models_path: str, log_file_name: str):
+def train(train_set: DataLoader, eval_set: DataLoader, test_set: DataLoader, max_epoch: int, models_path: str, log_file_name: str):
     print('train cnn - Start')
     log_file = open(log_file_name, "w", encoding="utf-8")
 
     model = img_cnn.ImgCNN()
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    print(f"device: {device}")
+    model = model.to(device)
     
     print('set optimizer & loss')
     criterion = nn.CrossEntropyLoss()
@@ -26,17 +28,17 @@ def train(train_set: DataLoader, eval_set: DataLoader, test_set: DataLoader, mod
     best_test_acc = 0
     best_test_epoch = -1
     
-    print('start training loops. #epochs = ' + str(MAX_EPOCH_NUMBER))
-    print(f"{'Epoch':^7} | {'Train Loss':^12} | {'Train Acc':^11} | {'Test Acc':^10} | {'Eval Acc':^9} | {'Elapsed':^9}")
+    print('start training loops. #epochs = ' + str(max_epoch))
+    print(f"{'Epoch':^7} | {'Train Loss':^12.2} | {'Train Acc':^10.2} | {'Test Acc':^10.2} | {'Eval Acc':^10.2} | {'Elapsed':^9}")
     print("-"*50)  
     
-    log_file.write(f"{'Epoch':^7} | {'Train Loss':^12} | {'Train Acc':^11} | {'Test Acc':^10} | {'Eval Acc':^9} | {'Elapsed':^9}\n")
+    log_file.write(f"{'Epoch':^7} | {'Train Loss':^12.2} | {'Train Acc':^10.2} | {'Test Acc':^10.2} | {'Eval Acc':^10.2} | {'Elapsed':^9}\n")
     log_file.write("-"*50 + "\n")
     log_file.flush()
         
     
     num_no_imp = 0
-    for i in tqdm(range(MAX_EPOCH_NUMBER)):
+    for i in tqdm(range(max_epoch)):
         epoch = i + 1
         epoch_start_time = time.time()
         total_loss = 0
@@ -46,6 +48,8 @@ def train(train_set: DataLoader, eval_set: DataLoader, test_set: DataLoader, mod
         
         for data in train_set:
             images, labels = data
+            images = images.to(device)
+            labels = labels.to(device)
             
             optimizer.zero_grad()
             
@@ -67,8 +71,8 @@ def train(train_set: DataLoader, eval_set: DataLoader, test_set: DataLoader, mod
         val_acc *= 100
         train_acc *= 100
         test_acc *= 100
-        print(f"{epoch:^7} | {avg_loss:^12.6f} | {train_acc:^9.2f} | {test_acc:^9.2f} |  {val_acc:^9.4f} | {epoch_time:^9.2f}")
-        log_file.write(f"{epoch:^7} | {avg_loss:^12.6f}  {train_acc:^9.2f} | {test_acc:^9.2f} |  {val_acc:^9.4f} | {epoch_time:^9.2f}\n")
+        print(f"{epoch:^7} | {avg_loss:^12.2f} | {train_acc:^10.2f} | {test_acc:^10.2f} |  {val_acc:^10.2f} | {epoch_time:^9f}")
+        log_file.write(f"{epoch:^7} | {avg_loss:^12.2f} | {train_acc:^10.2f} | {test_acc:^10.2f} |  {val_acc:^10.2f} | {epoch_time:^9f}\n")
         log_file.flush()
             
         if val_acc > best_val_acc:
