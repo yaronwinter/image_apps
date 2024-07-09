@@ -48,12 +48,10 @@ def train(train_set: DataLoader, eval_set: DataLoader, test_set: DataLoader, max
         
         for data in train_set:
             images, labels = data
-            images = torch.tensor(images).to(device)
-            labels = torch.tensor(labels).to(device)
             
             optimizer.zero_grad()
             
-            logits = model(images)
+            logits = model(images.to(device))
             
             loss = criterion(logits, labels)
             total_loss += loss.item()
