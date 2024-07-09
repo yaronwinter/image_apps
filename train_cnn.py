@@ -63,9 +63,9 @@ def train(train_set: DataLoader, eval_set: DataLoader, test_set: DataLoader, max
         epoch_time = time.time() - epoch_start_time
         
         # Validation test.
-        val_acc = test_cnn.test(model, eval_set)
-        train_acc = test_cnn.test(model, train_set)
-        test_acc = test_cnn.test(model, test_set)
+        val_acc = test_cnn.test(model, eval_set, device)
+        train_acc = test_cnn.test(model, train_set, device)
+        test_acc = test_cnn.test(model, test_set, device)
         val_acc *= 100
         train_acc *= 100
         test_acc *= 100
