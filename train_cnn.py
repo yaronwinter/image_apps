@@ -29,10 +29,10 @@ def train(train_set: DataLoader, eval_set: DataLoader, test_set: DataLoader, max
     best_test_epoch = -1
     
     print('start training loops. #epochs = ' + str(max_epoch))
-    print(f"{'Epoch':^7} | {'Train Loss':^12.2} | {'Train Acc':^10.2} | {'Test Acc':^10.2} | {'Eval Acc':^10.2} | {'Elapsed':^9}")
+    print(f"{'Epoch':^7} | {'Train Loss':^12} | {'Train Acc':^12} | {'Test Acc':^12} | {'Eval Acc':^12} | {'Elapsed':^9}")
     print("-"*50)  
     
-    log_file.write(f"{'Epoch':^7} | {'Train Loss':^12.2} | {'Train Acc':^10.2} | {'Test Acc':^10.2} | {'Eval Acc':^10.2} | {'Elapsed':^9}\n")
+    log_file.write(f"{'Epoch':^7} | {'Train Loss':^12} | {'Train Acc':^12} | {'Test Acc':^12} | {'Eval Acc':^12} | {'Elapsed':^9}\n")
     log_file.write("-"*50 + "\n")
     log_file.flush()
         
