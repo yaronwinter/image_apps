@@ -1,5 +1,5 @@
 import torch.nn as nn
-import torch.nn.functional as F
+from collections import OrderedDict
 
 INPUT_IMAGE_SIZE = 32
 INPUT_CHANNELS = 3
@@ -8,6 +8,16 @@ NUM_CLASSES = 10
 class ImgCNN(nn.Module):
     def __init__(self):
         super().__init__()
+
+        # index of conv layers z1 and z2
+        self.z1 = 0
+        self.z2 = 3
+
+        # feature maps
+        self.feature_maps = OrderedDict()
+
+        # switch
+        self.pool_locs = OrderedDict()
 
         self.features = nn.Sequential(
             # Input size: (batch size, 3, 32, 32)
