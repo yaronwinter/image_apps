@@ -6,7 +6,7 @@ INPUT_CHANNELS = 3
 NUM_CLASSES = 10
 
 class ImgCNN(nn.Module):
-    def __init__(self):
+    def __init__(self, conv1_channels: int, conv2_channels: int):
         super().__init__()
 
         # index of conv layers z1 and z2
@@ -21,22 +21,22 @@ class ImgCNN(nn.Module):
 
         self.features = nn.Sequential(
             # Input size: (batch size, 3, 32, 32)
-            nn.Conv2d(INPUT_CHANNELS, 32, 3, padding=1, stride=1),
-            # Z1: (batch size, 32, 32, 32)
+            nn.Conv2d(INPUT_CHANNELS, conv1_channels, 3, padding=1, stride=1),
+            # Z1: (batch size, conv1_channels, 32, 32)
             nn.ReLU(),
             nn.MaxPool2d(2, stride=2, return_indices=True),
-            # Max Pool 1 output size: (batch size, 32, 16, 16)
+            # Max Pool 1 output size: (batch size, conv1_channels, 16, 16)
 
-            # Input size: (batch size, 32, 16, 16)
-            nn.Conv2d(32, 32, 3, padding=1, stride=1),
-            # Z3: (batch size, 32, 16, 16)
+            # Input size: (batch size, conv1_channels, 16, 16)
+            nn.Conv2d(32, conv2_channels, 3, padding=1, stride=1),
+            # Z3: (batch size, conv2_channels, 16, 16)
             nn.ReLU(),
             nn.MaxPool2d(2, stride=2, return_indices=True),
-            # Max Pool 2 output size: (batch size, 32, 8, 8)
+            # Max Pool 2 output size: (batch size, conv2_channels, 8, 8)
         )
 
         self.classifier = nn.Sequential(
-            nn.Linear(32 * 8 * 8, 4096),
+            nn.Linear(conv2_channels * 8 * 8, 4096),
             nn.ReLU(),
             nn.Dropout(),
             nn.Linear(4096, 4096),

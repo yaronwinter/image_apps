@@ -18,6 +18,8 @@ if __name__ == "__main__":
     parser.add_argument("--prog_name", type=str, required=True)
     parser.add_argument("--batch_size", type=int, default=10)
     parser.add_argument("--max_epoch", type=int, default=100)
+    parser.add_argument("--layer1", type=int, default=6)
+    parser.add_argument("--layer2", type=int, default=16)
     parser.add_argument("--data_path", type=str, required=True)
     parser.add_argument("--models_path", type=str, required=True)
     args = parser.parse_args()
@@ -26,6 +28,8 @@ if __name__ == "__main__":
     print(f"batch_size: {args.batch_size}")
     print(f"data_path: {args.data_path}")
     print(f"models_path: {args.models_path}")
+    print(f"layer1: {args.layer1}")
+    print(f"layer2: {args.layer2}")
 
     transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(MEAN, STD)])
 
@@ -45,6 +49,6 @@ if __name__ == "__main__":
     evalloader = torch.utils.data.DataLoader(evalset, batch_size=args.batch_size, shuffle=False, num_workers=2)
 
     if args.prog_name == TRAIN_CNN:
-        train_cnn.train(trainloader, evalloader, testloader, args.max_epoch, args.models_path, "train_log.txt")
+        train_cnn.train(trainloader, evalloader, testloader, args.max_epoch, args.models_path, args.layer1, args.layer2, "train_log.txt")
     else:
         raise Exception("Unknown program: " + args.prog_name)

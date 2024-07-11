@@ -10,11 +10,18 @@ import time
 MIN_EPOCH_NUMBER = 7
 EARLY_STOP_PATIENCE = 2
 
-def train(train_set: DataLoader, eval_set: DataLoader, test_set: DataLoader, max_epoch: int, models_path: str, log_file_name: str):
+def train(train_set: DataLoader,
+          eval_set: DataLoader,
+          test_set: DataLoader,
+          max_epoch: int,
+          models_path: str,
+          layer1: int,
+          layer2: int,
+          log_file_name: str):
     print('train cnn - Start')
     log_file = open(log_file_name, "w", encoding="utf-8")
 
-    model = img_cnn.ImgCNN()
+    model = img_cnn.ImgCNN(layer1, layer2)
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     print(f"device: {device}")
     model = model.to(device)
