@@ -1,11 +1,11 @@
 import torch.nn as nn
 import img_cnn
-import test_cnn
 import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import time
+from conv import tester
 
 MIN_EPOCH_NUMBER = 7
 EARLY_STOP_PATIENCE = 2
@@ -70,9 +70,9 @@ def train(train_set: DataLoader,
         epoch_time = time.time() - epoch_start_time
         
         # Validation test.
-        val_acc = test_cnn.test(model, eval_set, device)
-        train_acc = test_cnn.test(model, train_set, device)
-        test_acc = test_cnn.test(model, test_set, device)
+        val_acc = tester.test(model, eval_set, device)
+        train_acc = tester.test(model, train_set, device)
+        test_acc = tester.test(model, test_set, device)
         val_acc *= 100
         train_acc *= 100
         test_acc *= 100

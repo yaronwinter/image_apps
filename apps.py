@@ -1,9 +1,9 @@
 import argparse
-import train_cnn
 import torch
 import torchvision
 import torchvision.transforms as transforms
 import numpy as np
+from conv import trainer
 
 MEAN = [0.485, 0.456, 0.406]
 STD = [0.229, 0.224, 0.225]
@@ -49,6 +49,6 @@ if __name__ == "__main__":
     evalloader = torch.utils.data.DataLoader(evalset, batch_size=args.batch_size, shuffle=False, num_workers=2)
 
     if args.prog_name == TRAIN_CNN:
-        train_cnn.train(trainloader, evalloader, testloader, args.max_epoch, args.models_path, args.layer1, args.layer2, "train_log.txt")
+        trainer.train(trainloader, evalloader, testloader, args.max_epoch, args.models_path, args.layer1, args.layer2, "train_log.txt")
     else:
         raise Exception("Unknown program: " + args.prog_name)
