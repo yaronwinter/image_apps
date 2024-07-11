@@ -28,7 +28,7 @@ class ImgCNN(nn.Module):
             # Max Pool 1 output size: (batch size, conv1_channels, 16, 16)
 
             # Input size: (batch size, conv1_channels, 16, 16)
-            nn.Conv2d(32, conv2_channels, 3, padding=1, stride=1),
+            nn.Conv2d(conv1_channels, conv2_channels, 3, padding=1, stride=1),
             # Z3: (batch size, conv2_channels, 16, 16)
             nn.ReLU(),
             nn.MaxPool2d(2, stride=2, return_indices=True),
