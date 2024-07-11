@@ -9,7 +9,7 @@ class ImgCNN(nn.Module):
     def __init__(self):
         super().__init__()
 
-        self.conv_features = nn.Sequential(
+        self.conv_blocks = nn.Sequential(
             # Z1 Conv Block
             nn.Conv2d(in_channels=INPUT_CHANNELS, out_channels=6, kernel_size=5),
             nn.ReLU(),
@@ -52,7 +52,7 @@ class ImgCNN(nn.Module):
         features = {}
         locations = {}
         x = images.clone()
-        for index, layer in enumerate(self.conv_features):
+        for index, layer in enumerate(self.conv_blocks):
             if isinstance(layer, nn.MaxPool2d):
                 x, location  = layer(x)
                 features[index] = x
@@ -76,11 +76,12 @@ class ImgCNN(nn.Module):
             init_features[:, :deconv_channel, :, :] = 0
             init_features[:, (deconv_channel+1):, :, :] = 0
 
-        y = init_features.clone()
+        new_image = init_features.clone()
         for index in range(init_dconv_layer, len(self.deconv_blocks)):
             layer = self.deconv_blocks[index]
-            if isinstance(layer)
+            if isinstance(layer, nn.MaxUnpool2d):
+                new_image = self.deconv_blocks[index](new_image, self.unpool2pool[index])
+            else:
+                new_image = self.deconv_blocks[index](new_image)
 
-
-
-        return logits
+        return logits, new_image

@@ -3,7 +3,8 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 import numpy as np
-from conv import trainer
+from conv import trainer as conv_trainer
+from dconv import trainer as dconv_trainer
 
 MEAN = [0.485, 0.456, 0.406]
 STD = [0.229, 0.224, 0.225]
@@ -11,6 +12,7 @@ STD = [0.229, 0.224, 0.225]
 EVAL_SET_FRACTION = 0.1
 
 TRAIN_CNN = "train_cnn"
+TRAIN_DECONV = "train_deconv"
 
 if __name__ == "__main__":
     print("Start Run")
@@ -18,8 +20,7 @@ if __name__ == "__main__":
     parser.add_argument("--prog_name", type=str, required=True)
     parser.add_argument("--batch_size", type=int, default=10)
     parser.add_argument("--max_epoch", type=int, default=100)
-    parser.add_argument("--layer1", type=int, default=6)
-    parser.add_argument("--layer2", type=int, default=16)
+    parser.add_argument("--gama", type=float, default=1.0)
     parser.add_argument("--data_path", type=str, required=True)
     parser.add_argument("--models_path", type=str, required=True)
     args = parser.parse_args()
@@ -28,8 +29,8 @@ if __name__ == "__main__":
     print(f"batch_size: {args.batch_size}")
     print(f"data_path: {args.data_path}")
     print(f"models_path: {args.models_path}")
-    print(f"layer1: {args.layer1}")
-    print(f"layer2: {args.layer2}")
+    print(f"max_epoch: {args.max_epoch}")
+    print(f"gama: {args.gama}")
 
     transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(MEAN, STD)])
 
@@ -49,6 +50,8 @@ if __name__ == "__main__":
     evalloader = torch.utils.data.DataLoader(evalset, batch_size=args.batch_size, shuffle=False, num_workers=2)
 
     if args.prog_name == TRAIN_CNN:
-        trainer.train(trainloader, evalloader, testloader, args.max_epoch, args.models_path, args.layer1, args.layer2, "train_log.txt")
+        conv_trainer.train(trainloader, evalloader, testloader, args.max_epoch, args.models_path, "train_log.txt")
+    elif args.prog_name == TRAIN_DECONV:
+        dconv_trainer.train(trainloader, evalloader, testloader, args.max_epoch, args.model_path, args.gama, "train_log.txt")
     else:
         raise Exception("Unknown program: " + args.prog_name)

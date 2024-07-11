@@ -4,8 +4,8 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import time
-from conv import tester
-from conv import img_cnn
+from dconv import tester
+from dconv import model as deconv_model
 
 MIN_EPOCH_NUMBER = 7
 EARLY_STOP_PATIENCE = 2
@@ -15,17 +15,19 @@ def train(train_set: DataLoader,
           test_set: DataLoader,
           max_epoch: int,
           models_path: str,
+          gama: float,
           log_file_name: str):
-    print('train cnn - Start')
+    print('train dconv - Start')
     log_file = open(log_file_name, "w", encoding="utf-8")
 
-    model = img_cnn.ImgCNN()
+    model = deconv_model.ImgCNN()
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     print(f"device: {device}")
     model = model.to(device)
     
     print('set optimizer & loss')
-    criterion = nn.CrossEntropyLoss()
+    classify_criterion = nn.CrossEntropyLoss()
+    reconstruct_criterion = nn.MSELoss()
     optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
     best_val_acc = 0
@@ -56,9 +58,13 @@ def train(train_set: DataLoader,
             
             optimizer.zero_grad()
             
-            logits = model(images.to(device))
+            images = images.to(device)
+            labels = labels.to(device)
+            logits, new_images = model(images)
             
-            loss = criterion(logits, labels.to(device))
+            classify_loss = classify_criterion(logits, labels.to(device))
+            reconst_loss = sum([reconstruct_criterion(new_images[:,i,:,:], images[:,i,:,:]) for i in range(deconv_model.INPUT_CHANNELS)])/3.0
+            loss = classify_loss + gama*reconst_loss
             total_loss += loss.item()
             num_batches += 1
             loss.backward()
@@ -98,7 +104,7 @@ def train(train_set: DataLoader,
             best_test_acc = test_acc
             best_test_epoch = epoch
     
-    print('train_cnn_nlp - end')
+    print('train dconc - end')
     print("Best Val Acc = {:.2f}".format(best_val_acc) + ", best epoch = " + str(best_val_epoch))
     print("Best Test Acc = {:.2f}".format(best_test_acc) + ", best epoch = " + str(best_test_epoch))
     log_file.write("Best Val Acc = {:.2f}".format(best_val_acc) + ", best epoch = " + str(best_val_epoch) + "\n")
