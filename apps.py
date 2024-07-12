@@ -52,6 +52,6 @@ if __name__ == "__main__":
     if args.prog_name == TRAIN_CNN:
         conv_trainer.train(trainloader, evalloader, testloader, args.max_epoch, args.models_path, "train_log.txt")
     elif args.prog_name == TRAIN_DECONV:
-        dconv_trainer.train(trainloader, evalloader, testloader, args.max_epoch, args.model_path, args.gama, "train_log.txt")
+        dconv_trainer.train(trainloader, evalloader, testloader, args.max_epoch, args.models_path, args.gama, "train_log.txt")
     else:
         raise Exception("Unknown program: " + args.prog_name)

@@ -81,7 +81,7 @@ def train(train_set: DataLoader,
         train_acc *= 100
         test_acc *= 100
         print(f"{epoch:^7} | {avg_loss:^12.2f} | {train_acc:^12.2f} | {test_acc:^12.2f} |  {val_acc:^12.2f} | {epoch_time:^9f}")
-        log_file.write(f"{epoch:^7} | {avg_loss:^12.2f} | {train_acc:^12.2f} | {test_acc:^12.2f} |  {val_acc:^12.2f} | {epoch_time:^9f}")
+        log_file.write(f"{epoch:^7} | {avg_loss:^12.2f} | {train_acc:^12.2f} | {test_acc:^12.2f} |  {val_acc:^12.2f} | {epoch_time:^9f}\n")
         log_file.flush()
             
         if val_acc > best_val_acc:

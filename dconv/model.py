@@ -80,7 +80,7 @@ class ImgCNN(nn.Module):
         for index in range(init_dconv_layer, len(self.deconv_blocks)):
             layer = self.deconv_blocks[index]
             if isinstance(layer, nn.MaxUnpool2d):
-                new_image = self.deconv_blocks[index](new_image, self.unpool2pool[index])
+                new_image = self.deconv_blocks[index](new_image, locations[self.unpool2pool[index]])
             else:
                 new_image = self.deconv_blocks[index](new_image)
 
